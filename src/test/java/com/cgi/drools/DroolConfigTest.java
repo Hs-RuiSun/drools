@@ -1,5 +1,8 @@
-package com.cgi.droolssandbox;
+package com.cgi.drools;
 
+import com.cgi.drools.config.DroolConfig;
+import com.cgi.drools.model.Customer;
+import com.cgi.drools.model.Offer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.api.runtime.KieSession;
@@ -23,10 +26,10 @@ public class DroolConfigTest {
         customer.addNeed(Customer.CustomerNeed.SAVINGACCOUNT);
         customer.addNeed(Customer.CustomerNeed.MORTAGE);
         kieSession.insert(customer);
-        // Now we add the global variable which we use to communicate back
         Offer offer = new Offer();
         kieSession.setGlobal("offer", offer);
         kieSession.fireAllRules();
+
         assertEquals(offer.getDiscount(), 10);
         assertEquals(offer.getFinancialPackage(), Offer.ProductPackage.CAREERFOCUSED_PACKAGE);
         assertEquals(offer.getProducts().size(),2);

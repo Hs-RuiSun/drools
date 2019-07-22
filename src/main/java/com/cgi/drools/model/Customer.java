@@ -1,4 +1,4 @@
-package com.cgi.droolssandbox;
+package com.cgi.drools.model;
 
 import java.util.ArrayList;
 import java.util.List;

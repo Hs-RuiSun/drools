@@ -1,4 +1,4 @@
-package com.cgi.droolssandbox;
+package com.cgi.drools.config;
 
 import org.apache.commons.io.FilenameUtils;
 import org.drools.decisiontable.InputType;
@@ -25,7 +25,7 @@ public class DroolConfig {
 	}
 
 	@Bean
-	public KieFileSystem kieFileSystem(KieServices kieServices, @Value("${rule.xls.path:src/main/resources/rules}") String path) {
+	public KieFileSystem kieFileSystem(KieServices kieServices, @Value("${rule.xls.path:src/main/resources/rules/}") String path) {
 		File[] files = (new File(path)).listFiles();
 		if(files.length == 0){
 			throw new RuntimeException("no files found under " + path);

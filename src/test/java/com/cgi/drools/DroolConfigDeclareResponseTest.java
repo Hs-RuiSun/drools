@@ -1,5 +1,7 @@
-package com.cgi.droolssandbox;
+package com.cgi.drools;
 
+import com.cgi.drools.config.DroolConfig;
+import com.cgi.drools.model.Request;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.api.definition.type.FactType;
@@ -71,7 +73,7 @@ public class DroolConfigDeclareResponseTest {
 	}
 
 	private FactType getFactType() {
-		return (FactType) kieContainer.getKieBase().getFactType("com.cgi.droolssandbox", "Response");
+		return kieContainer.getKieBase().getFactType("com.cgi.drools.model", "Response");
 	}
 
 }
