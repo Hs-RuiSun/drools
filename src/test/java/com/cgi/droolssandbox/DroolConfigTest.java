@@ -15,7 +15,7 @@ public class DroolConfigTest {
 	private KieSession kieSession;
 	
 	@Test
-    public void giveIndvidualLongStanding_whenFireRule_thenCorrectDiscount() {
+    public void giveIndvidualLongStanding_whenFireRule_thenCorrectDiscount() throws Exception {
         Customer customer = new Customer();
         customer.setLifeStage(Customer.CustomerLifeStage.CAREERFOCUSED);
         customer.setAssets(Customer.CustomerAssets.FROM150KTO300K);

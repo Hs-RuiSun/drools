@@ -1,13 +1,12 @@
 package com.cgi.droolssandbox;
 
-import org.drools.compiler.kie.builder.impl.InternalKieModule;
-import org.drools.compiler.kproject.ReleaseIdImpl;
+import org.apache.commons.io.FilenameUtils;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
-import org.kie.api.builder.ReleaseId;
+import org.kie.api.builder.KieRepository;
 import org.kie.api.io.Resource;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -15,42 +14,46 @@ import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import java.io.File;
 
 @Configuration
 public class DroolConfig {
-	
+	private static final String RULES_PATH = "rules/";
+
 	@Bean KieServices kieServices(){
 		return KieServices.Factory.get();
 	}
-	
+
 	@Bean
-	public ReleaseId releaseId(){
-		return new ReleaseIdImpl("com.cgi.droolssandbox", "SandBox", "1.0.0-1");
+	public KieFileSystem kieFileSystem(KieServices kieServices, @Value("${rule.xls.path:src/main/resources/rules}") String path) {
+		File[] files = (new File(path)).listFiles();
+		if(files.length == 0){
+			throw new RuntimeException("no files found under " + path);
+		}
+		KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
+		SpreadsheetCompiler compiler = new SpreadsheetCompiler();
+		for(File file : files){
+			Resource resource = ResourceFactory.newFileResource(file);
+			String type = FilenameUtils.getExtension(file.getPath());
+			if(type.equals("xls") || type.equals("xlsx")){
+				kieFileSystem.write(path + file.getName() + ".drl", compiler.compile(resource, InputType.XLS));
+			}
+			else if(type.equals("csv")){
+				kieFileSystem.write(path + file.getName() + ".drl", compiler.compile(resource, InputType.CSV));
+			}
+			else {
+				throw new RuntimeException("invalid spreadsheet file types found under " + path);
+			}
+		}
+		return kieFileSystem;
 	}
-	
+
 	@Bean
-	public Resource resource(@Value("${rule.xls.path:src/main/resources/xls/decision_table_example.xls}") String xlsPath){
-		return ResourceFactory.newFileResource(xlsPath);
-	}
-	
-	@Bean
-	public InternalKieModule internalKieModule(ReleaseId releaseId,
-			KieServices kieServices, Resource resource) {
-        SpreadsheetCompiler compiler = new SpreadsheetCompiler();
-        String drlContent = compiler.compile(resource, InputType.XLS);
-		System.out.println(drlContent);
-        KieFileSystem kfs = kieServices.newKieFileSystem();
-        kfs.generateAndWritePomXML(releaseId);
-        kfs.write("src/main/resources/GenRulesContent.drl", drlContent);
-        System.out.println(drlContent);
-        KieBuilder kieBuilder = kieServices.newKieBuilder(kfs).buildAll();
-        return (InternalKieModule) kieBuilder.getKieModule();
-	}
-	
-	@Bean
-	public KieContainer kieContainer(KieServices kieServices, InternalKieModule internalKieModule, ReleaseId releaseId){
-		kieServices.getRepository().addKieModule(internalKieModule);
-        return kieServices.newKieContainer(releaseId);
+	public KieContainer kieContainer(KieServices kieServices, KieFileSystem kieFileSystem){
+		KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem).buildAll();
+		KieRepository kieRepository = kieServices.getRepository();
+		kieRepository.addKieModule(kieBuilder.getKieModule());
+		return kieServices.newKieContainer(kieRepository.getDefaultReleaseId());
 	}
 
 	@Bean
