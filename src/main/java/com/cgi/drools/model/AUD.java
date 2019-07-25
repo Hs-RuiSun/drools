@@ -1,10 +1,10 @@
 package com.cgi.drools.model;
 
 public class AUD {
-    String reqPortfolioType;
-    String reqSpecialCommentCode;
-    Boolean isValid;
-    Integer errorCode;
+    private String reqPortfolioType;
+    private String reqSpecialCommentCode;
+    private Boolean isValid;
+    private Integer errorCode;
 
     public AUD(String reqPortfolioType, String reqSpecialCommentCode) {
         this.reqPortfolioType = reqPortfolioType;
