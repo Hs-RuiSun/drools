@@ -1,4 +1,4 @@
-package com.cgi.drools.model;
+package com.ruby.drools.model;
 
 import java.util.ArrayList;
 import java.util.List;

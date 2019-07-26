@@ -1,4 +1,4 @@
-package com.cgi.drools.model;
+package com.ruby.drools.model;
 
 public class AUD {
     private String reqPortfolioType;

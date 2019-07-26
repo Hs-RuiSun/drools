@@ -1,4 +1,4 @@
-package com.cgi.drools.config;
+package com.ruby.drools.config;
 
 import org.apache.commons.io.FilenameUtils;
 import org.drools.decisiontable.InputType;
@@ -36,6 +36,7 @@ public class DroolConfig {
 			Resource resource = ResourceFactory.newFileResource(file);
 			String type = FilenameUtils.getExtension(file.getPath());
 			if(type.equals("xls") || type.equals("xlsx")){
+				System.out.println(compiler.compile(resource, InputType.XLS));
 				kieFileSystem.write(path + file.getName() + ".drl", compiler.compile(resource, InputType.XLS));
 			}
 			else if(type.equals("csv")){

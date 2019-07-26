@@ -1,8 +1,8 @@
-package com.cgi.drools;
+package com.ruby.drools;
 
-import com.cgi.drools.config.DroolConfig;
-import com.cgi.drools.model.Customer;
-import com.cgi.drools.model.Offer;
+import com.ruby.drools.config.DroolConfig;
+import com.ruby.drools.model.Customer;
+import com.ruby.drools.model.Offer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.api.runtime.KieSession;
