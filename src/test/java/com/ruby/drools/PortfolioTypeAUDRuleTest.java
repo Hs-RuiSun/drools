@@ -21,11 +21,11 @@ public class PortfolioTypeAUDRuleTest {
 
     @Test
     public void testBlankFields(){
-        AUD bothFieldsBlank = new AUD("", "");
-        kieSession.insert(bothFieldsBlank);
+        AUD aud = new AUD("", "");
+        kieSession.insert(aud);
         kieSession.fireAllRules();
-        assertEquals(bothFieldsBlank.getErrorCode().intValue(), 4098);
-        assertFalse(bothFieldsBlank.isValid());
+        assertEquals(aud.getErrorCode().intValue(), 4098);
+        assertFalse(aud.isValid());
     }
 
     @Test
